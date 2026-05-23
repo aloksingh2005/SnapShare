@@ -41,7 +41,7 @@ const transfersMap = new Map<string, TransferSession>();
 const accessGrants = new Map<string, ShareAccessGrant>();
 
 const app = express();
-const PORT = 3000;
+const PORT = Number(process.env.PORT || 3000);
 const MAX_EXPIRY_MINUTES = 60;
 const ALLOWED_EXPIRY_PRESETS = new Set(["5m", "10m", "30m", "1h", "custom"]);
 

@@ -1,20 +1,59 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# SnapShare
 
-# Run and deploy your AI Studio app
+SnapShare is an Express + Vite app for short-lived file sharing with password protection, auto-expiry, optional one-time view, and optional download blocking.
 
-This contains everything you need to run your app locally.
+## Prerequisites
 
-View your app in AI Studio: https://ai.studio/apps/d8d3fdca-2d15-4d81-b5c0-53a0965829e1
+- Node.js 20+
+- npm
 
-## Run Locally
-
-**Prerequisites:**  Node.js
-
+## Local Development
 
 1. Install dependencies:
    `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
+2. Create a local env file from `.env.example` and set values as needed.
+3. Start dev server:
    `npm run dev`
+
+## Production Build
+
+1. Build:
+   `npm run build`
+2. Start:
+   `npm run start`
+
+The server binds to `process.env.PORT` (falls back to `3000`) and listens on `0.0.0.0`.
+
+## Deploy on Render (Node Web Service)
+
+Use these exact service settings:
+
+- Name: `SnapShare`
+- Branch: `main`
+- Root Directory: leave blank
+- Build Command: `npm install; npm run build`
+- Start Command: `npm run start`
+- Region: any
+- Environment Variables:
+  - `NODE_ENV=production`
+  - `GEMINI_API_KEY` (only if your app uses Gemini API routes)
+
+You can either:
+
+- configure manually in the Render form, or
+- deploy from `render.yaml` in this repo.
+
+## Important Hosting Caveat
+
+Current storage is ephemeral:
+
+- uploads are written to local filesystem (`uploads/`)
+- transfer/session state is kept in in-memory maps
+
+On Render, this means data is lost on restarts/redeploys, and free tier does not provide durable disk for this workload.
+
+## Required Next Step for Real Production Durability
+
+1. Move file storage to object storage (S3, R2, Supabase Storage, etc.).
+2. Move transfer/session metadata to a persistent store (Postgres/Redis).
+3. Keep this server as stateless API + frontend host.
